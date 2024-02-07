@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+		<title>p5.js Full-Screen Canvas Example</title>
+		<style>
+			body {
+				margin: 0;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 100vh;
+				background-color: #000000; /* Set background color to grey */
+			}
+		</style>
+	</head>
+	<body>
+		<script>
+			let lighter = [window.innerWidth / 2, window.innerHeight / 2];
+			let walls = [
+				[100, 100, 500, 50],
+				[1200, 100, 500, 50],
+				[100, 750, 500, 50],
+				[1200, 750, 500, 50],
+			];
+
+			function setup() {
+				createCanvas(windowWidth, windowHeight);
+			}
+
+			function draw() {
+				background(24);
+				drawLighter();
+				drawWalls();
+				drawLight();
+			}
+
+			function drawLighter() {
+				fill(255, 255, 0);
+				ellipse(lighter[0], lighter[1], 50, 50);
+			}
+
+			function drawWalls() {
+				fill(255, 255, 255);
+				for (const wall of walls) {
+					rect(wall[0], wall[1], wall[2], wall[3]);
+				}
+			}
+
+			function drawLight() {
+				stroke(250);
+				strokeWeight(10);
+				for (let i = 0; i < window.innerWidth; i += 50) {
+					for (let j = 0; j < window.innerHeight; j += 50) {
+						line(lighter[0], lighter[1], i, 0);
+						line(lighter[0], lighter[1], 0, j);
+						line(lighter[0], lighter[1], i, window.innerHeight);
+						line(lighter[0], lighter[1], window.innerWidth, j);
+					}
+				}
+			}
+
+			function windowResized() {
+				resizeCanvas(windowWidth, windowHeight);
+			}
+		</script>
+	</body>
+</html>
