@@ -1,119 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-		<title>Lighter</title>
-		<style>
-			body {
-				margin: 0;
-				overflow: hidden;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				height: 100vh;
-				background-color: #000000;
-			}
-		</style>
-	</head>
-	<body>
-		<script>
-			let lighter = [window.innerWidth / 2, window.innerHeight / 2];
-			let walls = [
-				[100, 100, 500, 50],
-				[1200, 100, 500, 50],
-				[100, 750, 500, 50],
-				[1200, 750, 500, 50],
-			];
-
-			function setup() {
-				createCanvas(windowWidth, windowHeight);
-			}
-
-			function draw() {
-				background(24);
-				drawLighter();
-				drawWalls();
-				drawLight();
-			}
-
-			function drawLighter() {
-				fill(255, 255, 0);
-				ellipse(lighter[0], lighter[1], 50, 50);
-			}
-
-			function drawWalls() {
-				fill(255, 255, 255);
-				for (const wall of walls) {
-					rect(wall[0], wall[1], wall[2], wall[3]);
-				}
-			}
-
-			function drawLight() {
-				stroke(250);
-				strokeWeight(15);
-				for (let i = 0; i < window.innerWidth; i += 20) {
-					for (let j = 0; j < window.innerHeight; j += 20) {
-						line(lighter[0], lighter[1], i, 0);
-						line(lighter[0], lighter[1], 0, j);
-						line(lighter[0], lighter[1], i, window.innerHeight);
-						line(lighter[0], lighter[1], window.innerWidth, j);
-					}
-				}
-			}
-
-			function drawLine(from_x, from_y, to_x, to_y) {
-				let x = calculateLineX(from_x, from_y, to_x, to_y);
-				let y = calculateLineY(from_x, from_y, to_x, to_y);
-
-				let nearest_x = -1;
-				let nearest_y = -1;
-				let nearest_dist = -1;
-
-				for (const wall of walls) {
-					// x
-					left = wall[0];
-					right = wall[0] + wall[2];
-
-					// y
-					top = wall[1];
-					bottom = wall[1] + wall[3];
-
-					point_left = x(left);
-					point_right = x(right);
-					point_top = y(top);
-					point_bottom = y(bottom);
-
-					for (const point of [point_left, point_right]) {
-						if (point >= top && point <= bottom) {
-						}
-					}
-
-					for (const point of [point_top, point_bottom]) {
-						if (point >= left && point <= right) {
-						}
-					}
-				}
-			}
-
-			function calculateDist(x1, y1, x2, y2) {
-				return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-			}
-
-			function calculateLineX(x1, y1, x2, y2) {
-				let m = (y2 - y1) / (x2 - x1);
-				return (x) => m * (x - x1) + y1;
-			}
-
-			function calculateLineY(x1, y1, x2, y2) {
-				let m = (y2 - y1) / (x2 - x1);
-				return (y) => (y - y1) / m + x1;
-			}
-
-			function windowResized() {
-				resizeCanvas(windowWidth, windowHeight);
-			}
-		</script>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <title>Lighter</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #000000;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="lighter.js"></script>
+  </body>
 </html>
