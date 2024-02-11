@@ -1,9 +1,30 @@
+const lighterRadius = 50;
+const lightGranularity = 15;
+const wallMargin = 100;
+const wallWidth = 500;
+const wallHeight = 50;
+
 let lighter = [window.innerWidth / 2, window.innerHeight / 2];
 let walls = [
-  [100, 100, 500, 50],
-  [800, 100, 500, 50],
-  [100, 450, 500, 50],
-  [800, 450, 500, 50],
+  [wallMargin, wallMargin, wallWidth, wallHeight],
+  [
+    window.innerWidth - wallWidth - wallMargin,
+    wallMargin,
+    wallWidth,
+    wallHeight,
+  ],
+  [
+    wallMargin,
+    window.innerHeight - wallHeight - wallMargin,
+    wallWidth,
+    wallHeight,
+  ],
+  [
+    window.innerWidth - wallWidth - wallMargin,
+    window.innerHeight - wallHeight - wallMargin,
+    wallWidth,
+    wallHeight,
+  ],
 ];
 
 function setup() {
@@ -18,8 +39,12 @@ function draw() {
 }
 
 function drawLighter() {
-  fill(255, 255, 0);
-  ellipse(lighter[0], lighter[1], 50, 50);
+  if (!wallCollision(mouseX, mouseY)) {
+    console.log(mouseX, mouseY);
+    lighter = [mouseX, mouseY];
+  }
+  fill(255, 255, 255);
+  ellipse(lighter[0], lighter[1], lighterRadius, lighterRadius);
 }
 
 function drawWalls() {
@@ -30,10 +55,9 @@ function drawWalls() {
 }
 
 function drawLight() {
-  //stroke(250);
-  //strokeWeight(150);
-  for (let i = 0; i < window.innerWidth; i += 25) {
-    for (let j = 0; j < window.innerHeight; j += 25) {
+  stroke(255);
+  for (let i = 0; i < window.innerWidth; i += lightGranularity) {
+    for (let j = 0; j < window.innerHeight; j += lightGranularity) {
       drawLine(lighter[0], lighter[1], i, 0);
       drawLine(lighter[0], lighter[1], 0, j);
       drawLine(lighter[0], lighter[1], i, window.innerHeight);
@@ -45,10 +69,6 @@ function drawLight() {
 function drawLine(from_x, from_y, to_x, to_y) {
   let x = calculateLineX(from_x, from_y, to_x, to_y);
   let y = calculateLineY(from_x, from_y, to_x, to_y);
-
-  if (x(from_y) !== from_x) {
-    //console.log(x(from_y), from_x);
-  }
 
   let nearest_x = to_x;
   let nearest_y = to_y;
@@ -68,8 +88,6 @@ function drawLine(from_x, from_y, to_x, to_y) {
     point_top = y(_top);
     point_bottom = y(_bottom);
 
-    //console.log(_left, _right, _top, _bottom);
-
     for (const point of [
       [_left, point_left],
       [_right, point_right],
@@ -82,11 +100,14 @@ function drawLine(from_x, from_y, to_x, to_y) {
         point[1] >= _top &&
         point[1] <= _bottom
       ) {
-        let dist = calculateDist(from_x, from_y, point[0], point[1]);
-        if (dist < nearest_dist) {
+        let x = point[0];
+        let y = point[1];
+        let dist = calculateDist(from_x, from_y, x, y);
+        let isSameDirection = sameDirection(from_x, from_y, to_x, to_y, x, y);
+        if (dist < nearest_dist && isSameDirection) {
           nearest_dist = dist;
-          nearest_x = point[1];
-          nearest_y = point[0];
+          nearest_x = x;
+          nearest_y = y;
         }
       }
     }
@@ -94,6 +115,27 @@ function drawLine(from_x, from_y, to_x, to_y) {
   line(from_x, from_y, nearest_x, nearest_y);
 }
 
+function sameDirection(from_x, from_y, to_x, to_y, x, y) {
+  return (
+    (to_x - from_x) * (x - from_x) >= 0 && (to_y - from_y) * (y - from_y) >= 0
+  );
+}
+
+function wallCollision(x, y) {
+  for (const wall of walls) {
+    // x
+    _left = wall[0];
+    _right = wall[0] + wall[2];
+
+    // y
+    _top = wall[1];
+    _bottom = wall[1] + wall[3];
+    if (x > _left && x < _right && y > _top && y < _bottom) {
+      return true;
+    }
+  }
+  return false;
+}
 function calculateDist(x1, y1, x2, y2) {
   return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
